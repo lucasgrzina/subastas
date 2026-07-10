@@ -1,0 +1,17 @@
+export const PERMISSIONS = {
+  USERS_READ:   'users.read',
+  USERS_CREATE: 'users.create',
+  USERS_UPDATE: 'users.update',
+  USERS_DELETE: 'users.delete',
+  ROLES_READ:   'roles.read',
+  ROLES_CREATE: 'roles.create',
+  ROLES_UPDATE: 'roles.update',
+  ROLES_DELETE: 'roles.delete',
+  EXPORTS_CREATE:              'exports.create',
+  SUPPORT_MESSAGES_READ:   'support-messages.read',
+  SUPPORT_MESSAGES_CREATE: 'support-messages.create',
+  SUPPORT_MESSAGES_UPDATE: 'support-messages.update',
+  SUPPORT_MESSAGES_DELETE: 'support-messages.delete',
+  SUPPORT_MESSAGES_REPLY:  'support-messages.reply',
+  SUPPORT_MESSAGES_CLOSE:  'support-messages.close',
+} as const
