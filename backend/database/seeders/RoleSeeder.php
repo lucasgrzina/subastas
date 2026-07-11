@@ -26,6 +26,11 @@ class RoleSeeder extends Seeder
             ['guid' => Str::uuid()->toString()],
         );
 
+        $bidder = Role::firstOrCreate(
+            ['name' => 'bidder', 'guard_name' => 'web'],
+            ['guid' => Str::uuid()->toString()],
+        );
+
         $superAdmin->syncPermissions(Permission::all());
 
         $admin->syncPermissions(Permission::whereIn('name', [
@@ -41,12 +46,31 @@ class RoleSeeder extends Seeder
             'products.create',
             'products.update',
             'products.delete',
+            'auctions.read',
+            'auctions.create',
+            'auctions.update',
+            'auctions.delete',
+            'lots.read',
+            'lots.create',
+            'lots.update',
+            'lots.delete',
+            'lots.close',
+            'bids.read',
         ])->get());
 
         $operador->syncPermissions(Permission::whereIn('name', [
             'users.read',
             'support-messages.read',
             'products.read',
+            'auctions.read',
+            'lots.read',
+            'bids.read',
+        ])->get());
+
+        $bidder->syncPermissions(Permission::whereIn('name', [
+            'auctions.read',
+            'lots.read',
+            'bids.create',
         ])->get());
     }
 }

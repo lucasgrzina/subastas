@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Contracts\Exports\ExportResolverInterface;
+use App\Contracts\Repositories\AuctionRepositoryInterface;
 use App\Contracts\Repositories\ExportRepositoryInterface;
+use App\Contracts\Repositories\LotRepositoryInterface;
 use App\Contracts\Repositories\NotificationRepositoryInterface;
 use App\Contracts\Repositories\PermissionRepositoryInterface;
 use App\Contracts\Repositories\ProductRepositoryInterface;
@@ -13,7 +15,9 @@ use App\Contracts\Repositories\SupportMessageRepositoryInterface;
 use App\Contracts\Repositories\SystemSettingRepositoryInterface;
 use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Models\Export;
+use App\Repositories\AuctionRepositoryEloquent;
 use App\Repositories\ExportRepositoryEloquent;
+use App\Repositories\LotRepositoryEloquent;
 use App\Repositories\NotificationRepositoryEloquent;
 use App\Repositories\PermissionRepositoryEloquent;
 use App\Repositories\ProductRepositoryEloquent;
@@ -43,6 +47,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(NotificationRepositoryInterface::class, NotificationRepositoryEloquent::class);
         $this->app->bind(SystemSettingRepositoryInterface::class, SystemSettingRepositoryEloquent::class);
         $this->app->bind(ProductRepositoryInterface::class, ProductRepositoryEloquent::class);
+        $this->app->bind(AuctionRepositoryInterface::class, AuctionRepositoryEloquent::class);
+        $this->app->bind(LotRepositoryInterface::class, LotRepositoryEloquent::class);
     }
 
     public function boot(): void

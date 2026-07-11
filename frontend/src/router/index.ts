@@ -9,6 +9,7 @@ import { systemSettingsRoutes } from '@/modules/system-settings/router/system-se
 import { apiClientsRoutes } from '@/modules/api-clients/router/api-clients.routes'
 import { influencersRoutes } from '@/modules/influencers/router/influencers.routes'
 import { productsRoutes } from '@/modules/products/router/products.routes'
+import { auctionsRoutes } from '@/modules/auctions/router/auctions.routes'
 import { authGuard } from './guards/auth.guard'
 import { guestGuard } from './guards/guest.guard'
 
@@ -29,6 +30,7 @@ const routes = [
             ...apiClientsRoutes,
             ...influencersRoutes,
             ...productsRoutes,
+            ...auctionsRoutes,
             ...settingsRoutes,
             ...supportMessagesRoutes,
             ...systemSettingsRoutes,

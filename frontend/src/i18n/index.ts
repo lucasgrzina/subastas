@@ -2,8 +2,7 @@ import { createI18n } from 'vue-i18n';
 import global from './locales/es/global';
 import auth from './locales/es/auth';
 import supportMessages from './locales/es/support-messages';
-import apiClients from './locales/es/api-clients';
-import influencers from './locales/es/influencers';
+import auctions from './locales/es/auctions';
 
 export const i18n = createI18n({
     legacy: false,
@@ -14,8 +13,7 @@ export const i18n = createI18n({
             global,
             auth,
             ...supportMessages,
-            ...apiClients,
-            ...influencers,
+            ...auctions,
         },
     },
     missingWarn: import.meta.env.DEV,

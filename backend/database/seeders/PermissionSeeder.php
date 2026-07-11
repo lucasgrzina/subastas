@@ -30,6 +30,17 @@ class PermissionSeeder extends Seeder
             'products.create',
             'products.update',
             'products.delete',
+            'auctions.read',
+            'auctions.create',
+            'auctions.update',
+            'auctions.delete',
+            'lots.read',
+            'lots.create',
+            'lots.update',
+            'lots.delete',
+            'lots.close',
+            'bids.read',
+            'bids.create',
         ];
 
         foreach ($permissions as $name) {
