@@ -8,6 +8,7 @@ import { supportMessagesRoutes } from '@/modules/support-messages/router/support
 import { systemSettingsRoutes } from '@/modules/system-settings/router/system-settings.routes'
 import { apiClientsRoutes } from '@/modules/api-clients/router/api-clients.routes'
 import { influencersRoutes } from '@/modules/influencers/router/influencers.routes'
+import { productsRoutes } from '@/modules/products/router/products.routes'
 import { authGuard } from './guards/auth.guard'
 import { guestGuard } from './guards/guest.guard'
 
@@ -27,6 +28,7 @@ const routes = [
             ...rolesRoutes,
             ...apiClientsRoutes,
             ...influencersRoutes,
+            ...productsRoutes,
             ...settingsRoutes,
             ...supportMessagesRoutes,
             ...systemSettingsRoutes,

@@ -26,6 +26,10 @@ class PermissionSeeder extends Seeder
             'support-messages.reply',
             'support-messages.close',
             'system-settings.manage',
+            'products.read',
+            'products.create',
+            'products.update',
+            'products.delete',
         ];
 
         foreach ($permissions as $name) {

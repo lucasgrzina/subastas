@@ -36,14 +36,17 @@ class RoleSeeder extends Seeder
             'api-clients.read',
             'api-clients.create',
             'api-clients.update',
-            'api-clients.delete'
+            'api-clients.delete',
+            'products.read',
+            'products.create',
+            'products.update',
+            'products.delete',
         ])->get());
 
         $operador->syncPermissions(Permission::whereIn('name', [
             'users.read',
             'support-messages.read',
+            'products.read',
         ])->get());
-
-        
     }
 }

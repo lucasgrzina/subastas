@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
@@ -12,10 +12,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             PermissionSeeder::class,
-            RoleSeeder::class
+            RoleSeeder::class,
+            WineReferenceDataSeeder::class,
         ]);
 
-        $user = User::factory()->create([
+        /*$user = User::factory()->create([
             'guid'       => Str::uuid()->toString(),
             'first_name' => 'Test',
             'last_name'  => 'User',
@@ -23,6 +24,6 @@ class DatabaseSeeder extends Seeder
             'email'      => 'test@example.com',
         ]);
 
-        $user->assignRole('super-admin');
+        $user->assignRole('super-admin');*/
     }
 }
