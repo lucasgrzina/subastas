@@ -1,0 +1,23 @@
+import type { RouteRecordRaw } from 'vue-router'
+
+export const {{ camelPlural }}Routes: RouteRecordRaw[] = [
+  {
+    path: '/{{ kebabPlural }}',
+    name: '{{ kebabPlural }}',
+    component: () => import('@/modules/{{ kebabPlural }}/pages/{{ studlyPlural }}Page.vue'),
+    meta: { requiresAuth: true, title: '{{ entityLabelPlural }}' },
+  },
+  {
+    path: '/{{ kebabPlural }}/nuevo',
+    name: '{{ kebabPlural }}-create',
+    component: () => import('@/modules/{{ kebabPlural }}/pages/{{ studlyName }}FormPage.vue'),
+    meta: { requiresAuth: true, title: 'Nuevo/a {{ entityLabelLower }}' },
+  },
+  {
+    path: '/{{ kebabPlural }}/:guid/editar',
+    name: '{{ kebabPlural }}-edit',
+    component: () => import('@/modules/{{ kebabPlural }}/pages/{{ studlyName }}FormPage.vue'),
+    props: true,
+    meta: { requiresAuth: true, title: 'Editar {{ entityLabelLower }}' },
+  },
+]

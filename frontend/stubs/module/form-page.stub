@@ -1,0 +1,77 @@
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import {{ studlyName }}Form from '../components/forms/{{ studlyName }}Form.vue'
+import { use{{ studlyName }} } from '../composables/use{{ studlyName }}'
+import { useCreate{{ studlyName }} } from '../composables/useCreate{{ studlyName }}'
+import { useUpdate{{ studlyName }} } from '../composables/useUpdate{{ studlyName }}'
+import type { {{ studlyName }}FormValues } from '../validators/{{ kebabName }}.validator'
+
+const props = defineProps<{ guid?: string }>()
+
+const router = useRouter()
+const { t } = useI18n()
+const formRef = ref<InstanceType<typeof {{ studlyName }}Form> | null>(null)
+
+const { data: item, isLoading } = use{{ studlyName }}(computed(() => props.guid))
+
+function goToList() {
+  router.push({ name: '{{ kebabPlural }}' })
+}
+
+const isEdit = computed(() => Boolean(props.guid))
+const title = computed(() => (isEdit.value ? t('{{ camelPlural }}.edit') : t('{{ camelPlural }}.new')))
+
+const create{{ studlyName }} = useCreate{{ studlyName }}()
+const update{{ studlyName }} = useUpdate{{ studlyName }}()
+
+const isMutating = computed(() => create{{ studlyName }}.isPending.value || update{{ studlyName }}.isPending.value)
+const fieldErrors = computed(() => (isEdit.value ? update{{ studlyName }}.fieldErrors.value : create{{ studlyName }}.fieldErrors.value))
+const generalError = computed(() => (isEdit.value ? update{{ studlyName }}.generalError.value : create{{ studlyName }}.generalError.value))
+
+function handleSubmit(values: {{ studlyName }}FormValues) {
+  if (isEdit.value) {
+    update{{ studlyName }}.mutate(
+      { guid: props.guid!, payload: values },
+      { onSuccess: goToList },
+    )
+  } else {
+    create{{ studlyName }}.mutate(values, { onSuccess: goToList })
+  }
+}
+</script>
+
+<template>
+  <div>
+    <AppHeader :title="title">
+      <template #actions="{ buttonSize }">
+        <BaseButton variant="secondary" :size="buttonSize" :disabled="isMutating" @click="goToList">
+          {{ t('{{ camelPlural }}.cancel') }}
+        </BaseButton>
+        <BaseButton variant="primary" :size="buttonSize" :loading="isMutating" @click="formRef?.submit()">
+          {{ isEdit ? t('{{ camelPlural }}.form.updateSave') : t('{{ camelPlural }}.form.createSave') }}
+        </BaseButton>
+      </template>
+    </AppHeader>
+
+    <a-alert
+      v-if="generalError && !fieldErrors"
+      :message="generalError"
+      type="error"
+      show-icon
+      style="margin-bottom: 16px"
+    />
+
+    <a-skeleton v-if="guid && isLoading" active />
+    <{{ studlyName }}Form
+      v-else
+      ref="formRef"
+      :mode="isEdit ? 'edit' : 'create'"
+      :initial-values="item ?? null"
+      :field-errors="fieldErrors"
+      hide-footer
+      @submit="handleSubmit"
+    />
+  </div>
+</template>

@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Services;
+
+use App\Contracts\Repositories\{{ studlyName }}RepositoryInterface;
+use App\Criteria\Shared\DateRangeCriteria;
+use App\Criteria\Shared\SearchCriteria;
+use App\Models\{{ studlyName }};
+{{ serviceUseStatements }}
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
+class {{ studlyName }}Service
+{
+    public function __construct(
+        private {{ studlyName }}RepositoryInterface ${{ camelName }}Repository,
+    ) {}
+
+    public function list(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->{{ camelName }}Repository->list(
+            $perPage,
+            new SearchCriteria($filters['search'] ?? null, '{{ searchColumn }}'),
+            new DateRangeCriteria($filters['date_from'] ?? null, $filters['date_to'] ?? null),
+        );
+    }
+
+    public function findByGuid(string $guid): ?{{ studlyName }}
+    {
+        return $this->{{ camelName }}Repository->findByGuid($guid);
+    }
+
+    public function create(array $data): {{ studlyName }}
+    {
+{{ serviceCreateBody }}
+    }
+
+    public function update({{ studlyName }} ${{ camelName }}, array $data): {{ studlyName }}
+    {
+{{ serviceUpdateBody }}
+    }
+
+    public function destroy({{ studlyName }} ${{ camelName }}): void
+    {
+        $this->{{ camelName }}Repository->destroy(${{ camelName }});
+    }
+}

@@ -1,0 +1,22 @@
+name: Currency
+softDeletes: false
+seeder: false
+fields:
+  - name: code
+    type: string
+    nullable: false
+    label: Código
+  - name: name
+    type: string
+    nullable: false
+    label: Nombre
+  - name: symbol
+    type: string
+    nullable: false
+    label: Símbolo
+  - name: is_active
+    type: boolean
+    nullable: false
+    label: Activa
+permissions:
+  module: currencies

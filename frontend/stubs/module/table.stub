@@ -1,0 +1,39 @@
+<script setup lang="ts">
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import { useI18n } from 'vue-i18n'
+{{ tableImports }}
+import type { {{ studlyName }}Item } from '../types/{{ kebabName }}.types'
+import type { TableColumnDef } from '@/core/composables/useColumnVisibility'
+
+const props = defineProps<{
+  {{ camelPlural }}: {{ studlyName }}Item[]
+  loading: boolean
+}>()
+
+const emit = defineEmits<{
+  edit: [item: {{ studlyName }}Item]
+  delete: [item: {{ studlyName }}Item]
+}>()
+
+const { t } = useI18n()
+
+const columns: TableColumnDef[] = [
+{{ tableColumns }}
+  { title: t('{{ camelPlural }}.table.actions'), key: 'actions', width: 160, alwaysVisible: true },
+]
+</script>
+
+<template>
+  <BaseDataTable
+    :columns="columns"
+    :data-source="props.{{ camelPlural }}"
+    :loading="loading"
+    row-key="guid"
+    :scroll="{ x: 900 }"
+    :pagination="false"
+  >
+    <template #bodyCell="{ column, record }">
+{{ tableBodyCells }}
+    </template>
+  </BaseDataTable>
+</template>

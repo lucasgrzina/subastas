@@ -56,6 +56,10 @@ class RoleSeeder extends Seeder
             'lots.delete',
             'lots.close',
             'bids.read',
+            'currencies.read',
+            'currencies.create',
+            'currencies.update',
+            'currencies.delete',
         ])->get());
 
         $operador->syncPermissions(Permission::whereIn('name', [
@@ -65,6 +69,7 @@ class RoleSeeder extends Seeder
             'auctions.read',
             'lots.read',
             'bids.read',
+            'currencies.read',
         ])->get());
 
         $bidder->syncPermissions(Permission::whereIn('name', [

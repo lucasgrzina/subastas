@@ -1,0 +1,15 @@
+import { useQuery } from '@tanstack/vue-query'
+import { computed, toValue } from 'vue'
+import type { Ref } from 'vue'
+import { list{{ studlyPlural }}Api } from '../api/{{ kebabPlural }}.api'
+import type { {{ studlyName }}Filters } from '../types/{{ kebabName }}.types'
+
+export function use{{ studlyPlural }}(filters: Ref<{{ studlyName }}Filters> | {{ studlyName }}Filters = {}) {
+  const filtersRef = computed(() => toValue(filters))
+
+  return useQuery({
+    queryKey: ['{{ camelPlural }}', filtersRef],
+    queryFn: ({ signal }) => list{{ studlyPlural }}Api(filtersRef.value, signal),
+    staleTime: 1000 * 60 * 5,
+  })
+}

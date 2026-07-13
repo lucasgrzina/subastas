@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Contracts\Exports\ExportResolverInterface;
 use App\Contracts\Repositories\AuctionRepositoryInterface;
+use App\Contracts\Repositories\CurrencyRepositoryInterface;
 use App\Contracts\Repositories\ExportRepositoryInterface;
 use App\Contracts\Repositories\LotRepositoryInterface;
 use App\Contracts\Repositories\NotificationRepositoryInterface;
@@ -16,6 +17,7 @@ use App\Contracts\Repositories\SystemSettingRepositoryInterface;
 use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Models\Export;
 use App\Repositories\AuctionRepositoryEloquent;
+use App\Repositories\CurrencyRepositoryEloquent;
 use App\Repositories\ExportRepositoryEloquent;
 use App\Repositories\LotRepositoryEloquent;
 use App\Repositories\NotificationRepositoryEloquent;
@@ -49,6 +51,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ProductRepositoryInterface::class, ProductRepositoryEloquent::class);
         $this->app->bind(AuctionRepositoryInterface::class, AuctionRepositoryEloquent::class);
         $this->app->bind(LotRepositoryInterface::class, LotRepositoryEloquent::class);
+        $this->app->bind(CurrencyRepositoryInterface::class, CurrencyRepositoryEloquent::class);
+        // module-generator:repository-bindings — do not remove
     }
 
     public function boot(): void

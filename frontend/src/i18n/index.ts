@@ -3,6 +3,7 @@ import global from './locales/es/global';
 import auth from './locales/es/auth';
 import supportMessages from './locales/es/support-messages';
 import auctions from './locales/es/auctions';
+import currencies from './locales/es/currencies';
 
 export const i18n = createI18n({
     legacy: false,
@@ -14,6 +15,7 @@ export const i18n = createI18n({
             auth,
             ...supportMessages,
             ...auctions,
+            ...currencies,
         },
     },
     missingWarn: import.meta.env.DEV,

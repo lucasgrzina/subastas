@@ -1,0 +1,16 @@
+import { update{{ studlyName }}Api } from '../api/{{ kebabPlural }}.api'
+import { useApiMutation } from '@/core/composables/useApiMutation'
+import type { Update{{ studlyName }}Payload } from '../types/{{ kebabName }}.types'
+
+export function useUpdate{{ studlyName }}() {
+  return useApiMutation({
+    mutationFn: ({ guid, payload }: { guid: string; payload: Update{{ studlyName }}Payload }) =>
+      update{{ studlyName }}Api(guid, payload),
+    successMessage: '{{ entityLabel }} actualizado correctamente',
+    errorMessage: 'Error al actualizar {{ entityLabelLower }}',
+    invalidate: (queryClient) => {
+      queryClient.invalidateQueries({ queryKey: ['{{ camelPlural }}'] })
+      queryClient.invalidateQueries({ queryKey: ['{{ camelName }}'] })
+    },
+  })
+}

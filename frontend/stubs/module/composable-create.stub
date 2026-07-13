@@ -1,0 +1,12 @@
+import { create{{ studlyName }}Api } from '../api/{{ kebabPlural }}.api'
+import { useApiMutation } from '@/core/composables/useApiMutation'
+import type { Create{{ studlyName }}Payload } from '../types/{{ kebabName }}.types'
+
+export function useCreate{{ studlyName }}() {
+  return useApiMutation({
+    mutationFn: (payload: Create{{ studlyName }}Payload) => create{{ studlyName }}Api(payload),
+    successMessage: '{{ entityLabel }} creado correctamente',
+    errorMessage: 'Error al crear {{ entityLabelLower }}',
+    invalidate: (queryClient) => queryClient.invalidateQueries({ queryKey: ['{{ camelPlural }}'] }),
+  })
+}

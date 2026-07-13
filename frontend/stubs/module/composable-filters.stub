@@ -1,0 +1,9 @@
+{{ filtersImports }}
+import { use{{ studlyPlural }}UiStore } from '../stores/{{ kebabPlural }}-ui.store'
+
+export function use{{ studlyName }}Filters() {
+  const store = use{{ studlyPlural }}UiStore()
+{{ filtersBody }}
+
+  return { filters: store.filters, {{ filtersReturnExtra }}reset: store.resetFilters }
+}

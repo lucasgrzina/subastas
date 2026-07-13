@@ -1,0 +1,8 @@
+<?php
+
+use App\Http\Controllers\V1\{{ studlyName }}Controller;
+use Illuminate\Support\Facades\Route;
+
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::apiResource('{{ kebabPlural }}', {{ studlyName }}Controller::class)->parameters(['{{ kebabPlural }}' => 'guid']);
+});

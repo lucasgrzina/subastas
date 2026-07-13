@@ -1,0 +1,12 @@
+import { z } from 'zod'
+
+export const create{{ studlyName }}Schema = z.object({
+{{ zodCreateFields }}
+})
+
+export const update{{ studlyName }}Schema = z.object({
+{{ zodUpdateFields }}
+})
+
+export type {{ studlyName }}FormValues = z.infer<typeof create{{ studlyName }}Schema>
+export type {{ studlyName }}UpdateFormValues = z.infer<typeof update{{ studlyName }}Schema>

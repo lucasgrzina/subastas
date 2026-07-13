@@ -1,0 +1,26 @@
+import { defineStore } from 'pinia'
+import { reactive } from 'vue'
+import type { {{ studlyName }}Filters } from '../types/{{ kebabName }}.types'
+
+const DEFAULT_PER_PAGE = 15
+
+/**
+ * UI-only state for the {{ camelPlural }} module — never server data (that
+ * lives in Vue Query). Holds the list page's active filters so they survive
+ * navigating away to the form page and back.
+ */
+export const use{{ studlyPlural }}UiStore = defineStore('{{ kebabPlural }}-ui', () => {
+  const filters = reactive<{{ studlyName }}Filters>({
+{{ storeDefaultFilters }}
+    page: 1,
+    per_page: DEFAULT_PER_PAGE,
+  })
+
+  function resetFilters() {
+{{ storeResetFilters }}
+    filters.page = 1
+    filters.per_page = DEFAULT_PER_PAGE
+  }
+
+  return { filters, resetFilters }
+})

@@ -10,6 +10,7 @@ import { apiClientsRoutes } from '@/modules/api-clients/router/api-clients.route
 import { influencersRoutes } from '@/modules/influencers/router/influencers.routes'
 import { productsRoutes } from '@/modules/products/router/products.routes'
 import { auctionsRoutes } from '@/modules/auctions/router/auctions.routes'
+import { currenciesRoutes } from '@/modules/currencies/router/currencies.routes'
 import { authGuard } from './guards/auth.guard'
 import { guestGuard } from './guards/guest.guard'
 
@@ -34,6 +35,7 @@ const routes = [
             ...settingsRoutes,
             ...supportMessagesRoutes,
             ...systemSettingsRoutes,
+            ...currenciesRoutes,
         ],
     },
     {

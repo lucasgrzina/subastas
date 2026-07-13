@@ -1,0 +1,19 @@
+<script setup lang="ts">
+import { SearchOutlined } from '@ant-design/icons-vue'
+import { useI18n } from 'vue-i18n'
+import FiltersRow from '@/components/filters/FiltersRow.vue'
+import FiltersCol from '@/components/filters/FiltersCol.vue'
+import FiltersWrapper from '@/components/filters/FiltersWrapper.vue'
+import type { {{ studlyName }}Filters } from '../types/{{ kebabName }}.types'
+
+const props = defineProps<{ filters: {{ studlyName }}Filters }>()
+const emit = defineEmits<{ 'update:filters': [filters: {{ studlyName }}Filters] }>()
+
+const { t } = useI18n()
+</script>
+
+<template>
+  <FiltersRow>
+{{ filtersTemplateBody }}
+  </FiltersRow>
+</template>

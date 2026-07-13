@@ -1,0 +1,70 @@
+<script setup lang="ts">
+{{ formVueImports }}
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import { useI18n } from 'vue-i18n'
+{{ formRelationImports }}
+import { create{{ studlyName }}Schema, type {{ studlyName }}FormValues } from '../../validators/{{ kebabName }}.validator'
+import type { {{ studlyName }}Item } from '../../types/{{ kebabName }}.types'
+
+const props = withDefaults(
+  defineProps<{
+    mode: 'create' | 'edit'
+    initialValues?: {{ studlyName }}Item | null
+    fieldErrors?: Record<string, string> | null
+    loading?: boolean
+    hideFooter?: boolean
+  }>(),
+  { loading: false, hideFooter: false },
+)
+
+const emit = defineEmits<{
+  submit: [values: {{ studlyName }}FormValues]
+}>()
+
+const { t } = useI18n()
+{{ formRelationQueries }}
+
+const { {{ formErrorsBinding }}defineField, handleSubmit, setErrors, setValues } = useForm({
+  validationSchema: toTypedSchema(create{{ studlyName }}Schema),
+})
+
+{{ formDefineFields }}
+
+watch(
+  () => props.initialValues,
+  (item) => {
+    if (props.mode === 'edit' && item) {
+      setValues({
+{{ formSetValuesEdit }}
+      })
+    }
+  },
+  { immediate: true },
+)
+
+watch(() => props.fieldErrors, (errs) => {
+  setErrors(errs ?? {})
+})
+
+const onSubmit = handleSubmit((values) => emit('submit', values))
+
+defineExpose({ submit: onSubmit })
+</script>
+
+<template>
+  <a-form layout="vertical" @submit.prevent="onSubmit">
+    <FormSection>
+      <a-row :gutter="12">
+{{ formFieldsTemplate }}
+      </a-row>
+    </FormSection>
+
+    <FormFooter
+      v-if="!hideFooter"
+      :loading="loading"
+      cancel-to="/{{ kebabPlural }}"
+      :save-label="mode === 'edit' ? t('{{ camelPlural }}.form.updateSave') : t('{{ camelPlural }}.form.createSave')"
+    />
+  </a-form>
+</template>

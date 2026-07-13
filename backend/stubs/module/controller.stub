@@ -1,0 +1,112 @@
+<?php
+
+namespace App\Http\Controllers\V1;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\{{ studlyPlural }}\Create{{ studlyName }}Request;
+use App\Http\Requests\{{ studlyPlural }}\Update{{ studlyName }}Request;
+use App\Http\Resources\V1\{{ studlyName }}Resource;
+use App\Services\{{ studlyName }}Service;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+class {{ studlyName }}Controller extends Controller
+{
+    public function __construct(
+        private {{ studlyName }}Service ${{ camelName }}Service,
+    ) {}
+
+    public function index(Request $request): JsonResponse
+    {
+        try {
+            if (! $request->user()->can('{{ moduleName }}.read')) {
+                return $this->makeError(null, 'No tenés permiso para ver {{ moduleName }}.', 403);
+            }
+
+            $filters = $request->only(['search', 'date_from', 'date_to']);
+            $perPage = (int) $request->get('per_page', 15);
+
+            $paginator = $this->{{ camelName }}Service->list($filters, $perPage);
+
+            return $this->makeSuccessPagination($paginator, {{ studlyName }}Resource::class);
+        } catch (\Exception $e) {
+            return $this->makeFromException($e);
+        }
+    }
+
+    public function store(Create{{ studlyName }}Request $request): JsonResponse
+    {
+        try {
+            if (! $request->user()->can('{{ moduleName }}.create')) {
+                return $this->makeError(null, 'No tenés permiso para crear {{ moduleName }}.', 403);
+            }
+
+            ${{ camelName }} = $this->{{ camelName }}Service->create($request->validated());
+
+            return $this->makeSuccess(new {{ studlyName }}Resource(${{ camelName }}), '{{ studlyName }} creado correctamente.', 201);
+        } catch (\Exception $e) {
+            return $this->makeFromException($e);
+        }
+    }
+
+    public function show(Request $request, string $guid): JsonResponse
+    {
+        try {
+            if (! $request->user()->can('{{ moduleName }}.read')) {
+                return $this->makeError(null, 'No tenés permiso para ver {{ moduleName }}.', 403);
+            }
+
+            ${{ camelName }} = $this->{{ camelName }}Service->findByGuid($guid);
+
+            if (! ${{ camelName }}) {
+                return $this->makeNotFound('{{ studlyName }} no encontrado.');
+            }
+
+            return $this->makeSuccess(new {{ studlyName }}Resource(${{ camelName }}));
+        } catch (\Exception $e) {
+            return $this->makeFromException($e);
+        }
+    }
+
+    public function update(Update{{ studlyName }}Request $request, string $guid): JsonResponse
+    {
+        try {
+            if (! $request->user()->can('{{ moduleName }}.update')) {
+                return $this->makeError(null, 'No tenés permiso para editar {{ moduleName }}.', 403);
+            }
+
+            ${{ camelName }} = $this->{{ camelName }}Service->findByGuid($guid);
+
+            if (! ${{ camelName }}) {
+                return $this->makeNotFound('{{ studlyName }} no encontrado.');
+            }
+
+            ${{ camelName }} = $this->{{ camelName }}Service->update(${{ camelName }}, $request->validated());
+
+            return $this->makeSuccess(new {{ studlyName }}Resource(${{ camelName }}), '{{ studlyName }} actualizado correctamente.');
+        } catch (\Exception $e) {
+            return $this->makeFromException($e);
+        }
+    }
+
+    public function destroy(Request $request, string $guid): JsonResponse
+    {
+        try {
+            if (! $request->user()->can('{{ moduleName }}.delete')) {
+                return $this->makeError(null, 'No tenés permiso para eliminar {{ moduleName }}.', 403);
+            }
+
+            ${{ camelName }} = $this->{{ camelName }}Service->findByGuid($guid);
+
+            if (! ${{ camelName }}) {
+                return $this->makeNotFound('{{ studlyName }} no encontrado.');
+            }
+
+            $this->{{ camelName }}Service->destroy(${{ camelName }});
+
+            return $this->makeSuccess(null, '{{ studlyName }} eliminado correctamente.');
+        } catch (\Exception $e) {
+            return $this->makeFromException($e);
+        }
+    }
+}

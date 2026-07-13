@@ -41,6 +41,10 @@ class PermissionSeeder extends Seeder
             'lots.close',
             'bids.read',
             'bids.create',
+            'currencies.read',
+            'currencies.create',
+            'currencies.update',
+            'currencies.delete',
         ];
 
         foreach ($permissions as $name) {
