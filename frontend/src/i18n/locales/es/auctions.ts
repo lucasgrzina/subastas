@@ -97,6 +97,8 @@ export default {
     form: {
       amount: 'Monto de la oferta',
       submit: 'Ofertar',
+      minFirst: 'Precio base: ${amount}',
+      minNext: 'Oferta mínima: ${amount}',
     },
   },
 }

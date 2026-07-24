@@ -182,13 +182,23 @@ class LotService
                 ]);
             }
 
-            $floor = $locked->current_price === null
+            $isFirstBid = $locked->current_price === null;
+
+            $floor = $isFirstBid
                 ? (string) $locked->starting_price
                 : bcadd((string) $locked->current_price, (string) $locked->bid_increment, 2);
 
             if (bccomp($amount, $floor, 2) < 0) {
+                // The floor differs by case: the opening bid must meet the base
+                // price, while later bids must clear current price + increment.
+                // A single generic message that only names "precio actual" is
+                // confusing on a fresh lot where there is no current price yet.
+                $message = $isFirstBid
+                    ? "La primera oferta debe ser mayor o igual al precio base (\${$floor})."
+                    : "La oferta debe ser mayor o igual al mínimo (\${$floor}): precio actual más el incremento.";
+
                 throw ValidationException::withMessages([
-                    'amount' => 'La oferta debe ser mayor o igual al precio actual más el incremento mínimo.',
+                    'amount' => $message,
                 ]);
             }
 
