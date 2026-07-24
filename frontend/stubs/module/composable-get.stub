@@ -1,0 +1,14 @@
+import { useQuery } from '@tanstack/vue-query'
+import { computed, toValue } from 'vue'
+import type { Ref } from 'vue'
+import { get{{ studlyName }}Api } from '../api/{{ kebabPlural }}.api'
+
+export function use{{ studlyName }}(guid: Ref<string | undefined> | string | undefined) {
+  const guidValue = computed(() => toValue(guid))
+
+  return useQuery({
+    queryKey: ['{{ camelName }}', guidValue],
+    queryFn: () => get{{ studlyName }}Api(guidValue.value as string),
+    enabled: computed(() => Boolean(guidValue.value)),
+  })
+}

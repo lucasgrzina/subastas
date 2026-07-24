@@ -8,7 +8,11 @@ import {
   ApiOutlined,
   SettingOutlined,
   CustomerServiceOutlined,
-  VideoCameraOutlined
+  VideoCameraOutlined,
+  ShoppingOutlined,
+  ScheduleOutlined,
+  GoldOutlined,
+  DollarCircleOutlined
 } from '@ant-design/icons-vue'
 import { usePermission } from '@/core/composables/usePermissions'
 
@@ -21,6 +25,10 @@ const systemNavItems = [
   { path: '/dashboard',        label: 'Dashboard',        icon: DashboardOutlined,         permission: null                    },
   { path: '/users',            label: 'Usuarios',          icon: TeamOutlined,              permission: 'users.read'            },
   { path: '/roles',            label: 'Roles y Permisos',  icon: SafetyCertificateOutlined, permission: 'roles.read'            },
+  { path: '/products',         label: 'Productos',         icon: ShoppingOutlined,          permission: 'products.read'         },
+  { path: '/auctions',         label: 'Subastas',          icon: ScheduleOutlined,          permission: 'auctions.read'         },
+  { path: '/lots',             label: 'Lotes',             icon: GoldOutlined,               permission: 'lots.read'             },
+  { path: '/currencies',       label: 'Monedas',           icon: DollarCircleOutlined,      permission: 'currencies.read'       },
   { path: '/api-clients',      label: 'Clientes API',      icon: ApiOutlined,               permission: 'api-clients.read'      },
   { path: '/influencers',      label: 'Influencers',       icon: VideoCameraOutlined,       permission: 'influencers.read'      },
   { path: '/settings',         label: 'Configuración',     icon: SettingOutlined,           permission: null                    },

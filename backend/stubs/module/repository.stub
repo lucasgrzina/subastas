@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Repositories;
+
+use App\Contracts\QueryCriterion;
+use App\Contracts\Repositories\{{ studlyName }}RepositoryInterface;
+use App\Models\{{ studlyName }};
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Model;
+
+class {{ studlyName }}RepositoryEloquent extends BaseRepositoryEloquent implements {{ studlyName }}RepositoryInterface
+{
+    protected function model(): string
+    {
+        return {{ studlyName }}::class;
+    }
+
+    public function findByGuid(string $guid): ?{{ studlyName }}
+    {
+        return $this->newQuery(){{ withRelationsCall }}->where('guid', $guid)->first();
+    }
+
+    public function list(int $perPage, QueryCriterion ...$criteria): LengthAwarePaginator
+    {
+        return $this->buildQuery(...$criteria){{ withRelationsCall }}
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+    }
+
+    public function create(array $data): {{ studlyName }}
+    {
+        /** @var {{ studlyName }} */
+        return parent::create($data);
+    }
+
+    public function update(Model $model, array $data): {{ studlyName }}
+    {
+        $model->fill($data);
+        $model->save();
+
+        /** @var {{ studlyName }} */
+        return {{ freshCall }};
+    }
+
+    public function destroy(Model $model): ?bool
+    {
+        return parent::destroy($model);
+    }
+}

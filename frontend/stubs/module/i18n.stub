@@ -1,0 +1,20 @@
+export default {
+  {{ camelPlural }}: {
+    title: '{{ entityLabelPlural }}',
+    subtitle: 'Gestioná {{ entityLabelPluralLower }}.',
+    new: 'Nuevo/a {{ entityLabelLower }}',
+    edit: 'Editar {{ entityLabelLower }}',
+    empty: 'No se encontraron {{ entityLabelPluralLower }}.',
+    createFirst: 'Crear primer/a {{ entityLabelLower }}',
+    cancel: 'Cancelar',
+    table: {
+{{ i18nTableFields }}
+      actions: 'Acciones',
+    },
+    form: {
+{{ i18nFormFields }}
+      createSave: 'Crear {{ entityLabelLower }}',
+      updateSave: 'Actualizar',
+    },
+  },
+}

@@ -1,0 +1,32 @@
+import { http } from '@/core/api/http'
+import type {
+  {{ studlyName }}Item,
+  {{ studlyName }}ListParams,
+  {{ studlyName }}ListResponse,
+  Create{{ studlyName }}Payload,
+  Update{{ studlyName }}Payload,
+} from '../types/{{ kebabName }}.types'
+
+export async function list{{ studlyPlural }}Api(params: {{ studlyName }}ListParams = {}, signal?: AbortSignal): Promise<{{ studlyName }}ListResponse> {
+  const res = await http.get<{{ studlyName }}ListResponse>('/v1/{{ kebabPlural }}', { params, signal })
+  return res.data
+}
+
+export async function get{{ studlyName }}Api(guid: string): Promise<{{ studlyName }}Item> {
+  const res = await http.get<{{ studlyName }}Item>(`/v1/{{ kebabPlural }}/${guid}`)
+  return res.data
+}
+
+export async function create{{ studlyName }}Api(payload: Create{{ studlyName }}Payload): Promise<{{ studlyName }}Item> {
+  const res = await http.post<{{ studlyName }}Item>('/v1/{{ kebabPlural }}', payload)
+  return res.data
+}
+
+export async function update{{ studlyName }}Api(guid: string, payload: Update{{ studlyName }}Payload): Promise<{{ studlyName }}Item> {
+  const res = await http.put<{{ studlyName }}Item>(`/v1/{{ kebabPlural }}/${guid}`, payload)
+  return res.data
+}
+
+export async function delete{{ studlyName }}Api(guid: string): Promise<void> {
+  await http.delete(`/v1/{{ kebabPlural }}/${guid}`)
+}

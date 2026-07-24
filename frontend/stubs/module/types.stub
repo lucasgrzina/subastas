@@ -1,0 +1,30 @@
+export interface {{ studlyName }}Item {
+  guid: string
+{{ itemFields }}
+  created_at: string
+{{ softDeleteField }}
+}
+
+export interface Create{{ studlyName }}Payload {
+{{ createFields }}
+}
+
+export interface Update{{ studlyName }}Payload {
+{{ updateFields }}
+}
+
+export interface {{ studlyName }}ListParams {
+{{ filterSearchParam }}
+  page?: number
+  per_page?: number
+}
+
+export type {{ studlyName }}Filters = {{ studlyName }}ListParams
+
+export interface {{ studlyName }}ListResponse {
+  data: {{ studlyName }}Item[]
+  current_page: number
+  last_page: number
+  per_page: number
+  total: number
+}

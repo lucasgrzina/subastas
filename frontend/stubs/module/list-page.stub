@@ -1,0 +1,82 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { PlusOutlined } from '@ant-design/icons-vue'
+import { useI18n } from 'vue-i18n'
+import {{ studlyName }}Filters from '../components/{{ studlyName }}Filters.vue'
+import {{ studlyPlural }}Table from '../components/{{ studlyPlural }}Table.vue'
+import { use{{ studlyPlural }} } from '../composables/use{{ studlyPlural }}'
+import { useDelete{{ studlyName }} } from '../composables/useDelete{{ studlyName }}'
+import { use{{ studlyName }}Filters } from '../composables/use{{ studlyName }}Filters'
+import type { {{ studlyName }}Filters as {{ studlyName }}FiltersType, {{ studlyName }}Item } from '../types/{{ kebabName }}.types'
+
+const router = useRouter()
+const { t } = useI18n()
+const { filters{{ filtersDestructureExtra }} } = use{{ studlyName }}Filters()
+const { delete{{ studlyName }} } = useDelete{{ studlyName }}()
+
+const filtersModel = computed<{{ studlyName }}FiltersType>({
+  get: () => filters,
+  set: (val) => Object.assign(filters, val),
+})
+
+const queryParams = computed(() => ({
+  ...filters,
+{{ queryParamsSearch }}
+}))
+
+const { data, isLoading } = use{{ studlyPlural }}(queryParams)
+
+function handleEdit(item: {{ studlyName }}Item) {
+  router.push({ name: '{{ kebabPlural }}-edit', params: { guid: item.guid } })
+}
+</script>
+
+<template>
+  <div>
+    <AppHeader :title="t('{{ camelPlural }}.title')" :subtitle="t('{{ camelPlural }}.subtitle')">
+      <template #actions="{ buttonSize }">
+        <PermissionGuard permission="{{ moduleName }}.create">
+          <BaseButton variant="primary" :size="buttonSize" @click="router.push({ name: '{{ kebabPlural }}-create' })">
+            <template #icon><PlusOutlined /></template>
+            {{ t('{{ camelPlural }}.new') }}
+          </BaseButton>
+        </PermissionGuard>
+      </template>
+    </AppHeader>
+
+    <{{ studlyName }}Filters v-model:filters="filtersModel" />
+
+    <EmptyState
+      v-if="!isLoading && !data?.data.length"
+      :message="t('{{ camelPlural }}.empty')"
+      icon="🗂️"
+    >
+      <PermissionGuard permission="{{ moduleName }}.create">
+        <BaseButton variant="primary" class="mt-3" @click="router.push({ name: '{{ kebabPlural }}-create' })">
+          <template #icon><PlusOutlined /></template>
+          {{ t('{{ camelPlural }}.createFirst') }}
+        </BaseButton>
+      </PermissionGuard>
+    </EmptyState>
+
+    <{{ studlyPlural }}Table
+      v-else
+      :{{ camelPlural }}="data?.data ?? []"
+      :loading="isLoading"
+      @edit="handleEdit"
+      @delete="delete{{ studlyName }}"
+    />
+
+    <BasePagination
+      :page="filters.page"
+      :total="data?.total ?? 0"
+      :per-page="filters.per_page"
+      @change="({ page, perPage }) => { filters.page = page; filters.per_page = perPage }"
+    />
+  </div>
+</template>
+
+<style scoped>
+.mt-3 { margin-top: 12px; }
+</style>
