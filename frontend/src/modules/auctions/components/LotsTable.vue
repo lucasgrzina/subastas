@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { EditOutlined, DeleteOutlined, EyeOutlined, LockOutlined } from '@ant-design/icons-vue'
 import { useI18n } from 'vue-i18n'
-import type { LotItem, LotStatus } from '../types/lot.types'
+import type { LotItem, LotStatus, LotType } from '../types/lot.types'
 import type { TableColumnDef } from '@/core/composables/useColumnVisibility'
 
 const props = defineProps<{
@@ -33,6 +33,11 @@ const statusColor: Record<LotStatus, string> = {
   sold: 'gold',
   unsold: 'default',
 }
+
+const typeColor: Record<LotType, string> = {
+  single: 'default',
+  bundle: 'purple',
+}
 </script>
 
 <template>
@@ -45,7 +50,14 @@ const statusColor: Record<LotStatus, string> = {
     :pagination="false"
   >
     <template #bodyCell="{ column, record }">
-      <template v-if="column.key === 'auction'">
+      <template v-if="column.key === 'lot_number'">
+        {{ record.display_title }}
+        <a-tag :color="typeColor[record.type as LotType]" style="margin-left: 4px">
+          {{ t(`lots.type.${record.type}`) }}
+        </a-tag>
+      </template>
+
+      <template v-else-if="column.key === 'auction'">
         {{ record.auction?.title ?? '—' }}
       </template>
 

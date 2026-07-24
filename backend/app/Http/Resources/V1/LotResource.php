@@ -12,6 +12,9 @@ class LotResource extends JsonResource
         return [
             'guid' => $this->guid,
             'lot_number' => $this->lot_number,
+            'title' => $this->title,
+            'display_title' => $this->display_title,
+            'type' => $this->type,
             'starting_price' => $this->starting_price,
             'bid_increment' => $this->bid_increment,
             'reserve_price' => $this->reserve_price,

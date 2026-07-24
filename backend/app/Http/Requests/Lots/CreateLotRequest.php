@@ -16,6 +16,7 @@ class CreateLotRequest extends FormRequest
         return [
             'auction_guid' => ['required', 'uuid', 'exists:auctions,guid'],
             'lot_number' => ['required', 'string', 'max:50'],
+            'title' => ['nullable', 'string', 'max:255'],
             'starting_price' => ['required', 'numeric', 'gt:0', 'decimal:0,2'],
             'bid_increment' => ['required', 'numeric', 'gt:0', 'decimal:0,2'],
             'reserve_price' => ['nullable', 'numeric', 'gt:0', 'decimal:0,2'],
@@ -33,6 +34,8 @@ class CreateLotRequest extends FormRequest
             'auction_guid.required' => 'La subasta es obligatoria.',
             'auction_guid.exists' => 'La subasta seleccionada no existe.',
             'lot_number.required' => 'El número de lote es obligatorio.',
+            'title.string' => 'El título debe ser un texto.',
+            'title.max' => 'El título no puede superar los 255 caracteres.',
             'starting_price.required' => 'El precio base es obligatorio.',
             'starting_price.gt' => 'El precio base debe ser mayor a cero.',
             'starting_price.decimal' => 'El precio base admite hasta 2 decimales.',

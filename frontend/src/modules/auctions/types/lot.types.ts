@@ -4,6 +4,9 @@ import type { BidItem } from './bid.types'
 /** Final 4-value enum (no `closed`) — see backend tasks obs#41 1.2a. */
 export type LotStatus = 'scheduled' | 'open' | 'sold' | 'unsold'
 
+/** `single`: exactly one attached product at quantity 1. `bundle`: everything else. */
+export type LotType = 'single' | 'bundle'
+
 export interface LotProductItem {
   guid: string
   title: string
@@ -18,6 +21,11 @@ export interface LotWinnerRef {
 export interface LotItem {
   guid: string
   lot_number: string
+  /** Optional editorial override — null when unset. */
+  title: string | null
+  /** Resolved value: `title` if set, otherwise derived from products. Never null. */
+  display_title: string
+  type: LotType
   starting_price: string
   bid_increment: string
   reserve_price: string | null
@@ -39,6 +47,7 @@ export interface LotProductPayload {
 export interface CreateLotPayload {
   auction_guid: string
   lot_number: string
+  title?: string | null
   starting_price: string
   bid_increment: string
   reserve_price?: string | null
@@ -48,6 +57,7 @@ export interface CreateLotPayload {
 
 export interface UpdateLotPayload {
   lot_number?: string
+  title?: string | null
   starting_price?: string
   bid_increment?: string
   reserve_price?: string | null

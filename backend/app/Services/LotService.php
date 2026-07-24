@@ -58,6 +58,7 @@ class LotService
             $lot = $this->lotRepository->create([
                 'auction_id' => $auction->id,
                 'lot_number' => $data['lot_number'],
+                'title' => $data['title'] ?? null,
                 'starting_price' => $data['starting_price'],
                 'bid_increment' => $data['bid_increment'],
                 'reserve_price' => $data['reserve_price'] ?? null,
@@ -137,7 +138,7 @@ class LotService
 
         return DB::transaction(function () use ($lot, $data) {
             $lotData = array_intersect_key($data, array_flip([
-                'lot_number', 'starting_price', 'bid_increment', 'reserve_price', 'status',
+                'lot_number', 'title', 'starting_price', 'bid_increment', 'reserve_price', 'status',
             ]));
 
             if (! empty($lotData)) {

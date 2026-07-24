@@ -49,6 +49,10 @@ export default {
       sold: 'Vendido',
       unsold: 'No vendido',
     },
+    type: {
+      single: 'Individual',
+      bundle: 'Combo',
+    },
     table: {
       lot_number: 'Lote',
       auction: 'Subasta',
@@ -60,6 +64,8 @@ export default {
     form: {
       auction: 'Subasta',
       lot_number: 'Número de lote',
+      title: 'Título',
+      titlePlaceholder: 'Ej: Vertical Catena 2015-2020 (opcional)',
       starting_price: 'Precio base',
       bid_increment: 'Incremento mínimo',
       reserve_price: 'Precio de reserva',

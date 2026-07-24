@@ -263,4 +263,143 @@ class LotApiTest extends TestCase
         $this->getJson("/api/v1/lots/{$lotUnderCancelled->guid}")->assertNotFound();
         $this->getJson("/api/v1/lots/{$lotUnderDraft->guid}/bids")->assertNotFound();
     }
+
+    // --- Editorial title / derived display_title / type ---
+
+    public function test_crea_lote_con_titulo_explicito(): void
+    {
+        $this->actingAsRole('admin');
+        $auction = $this->createAuction();
+        $product = $this->createProduct();
+
+        $response = $this->postJson('/api/v1/lots', [
+            'auction_guid' => $auction->guid,
+            'lot_number' => 'LOT-200',
+            'title' => 'Vertical Catena 2015-2020',
+            'starting_price' => '100.00',
+            'bid_increment' => '10.00',
+            'products' => [['product_guid' => $product->guid, 'quantity' => 1]],
+        ]);
+
+        $response->assertCreated()
+            ->assertJsonPath('data.title', 'Vertical Catena 2015-2020')
+            ->assertJsonPath('data.display_title', 'Vertical Catena 2015-2020');
+
+        $this->assertDatabaseHas('lots', ['lot_number' => 'LOT-200', 'title' => 'Vertical Catena 2015-2020']);
+    }
+
+    public function test_display_title_deriva_del_producto_unico_sin_titulo(): void
+    {
+        $this->actingAsRole('admin');
+        $auction = $this->createAuction();
+        $lot = $this->createLot($auction, ['lot_number' => 'LOT-201'], [$this->createProduct(['title' => 'Malbec Reserva'])]);
+
+        $response = $this->getJson("/api/v1/lots/{$lot->guid}")->assertOk();
+
+        $response->assertJsonPath('data.title', null)
+            ->assertJsonPath('data.display_title', 'Malbec Reserva')
+            ->assertJsonPath('data.type', 'single');
+    }
+
+    public function test_display_title_es_etiqueta_por_cantidad_cuando_producto_unico_tiene_cantidad_mayor_a_uno(): void
+    {
+        $this->actingAsRole('admin');
+        $auction = $this->createAuction();
+        $product = $this->createProduct(['title' => 'Malbec Reserva']);
+
+        $lot = Lot::create([
+            'auction_id' => $auction->id,
+            'lot_number' => 'LOT-202',
+            'starting_price' => '100.00',
+            'bid_increment' => '10.00',
+            'status' => 'scheduled',
+        ]);
+        $lot->products()->attach($product->id, ['quantity' => 2]);
+
+        $response = $this->getJson("/api/v1/lots/{$lot->guid}")->assertOk();
+
+        $response->assertJsonPath('data.display_title', 'Lote LOT-202 — 1 productos')
+            ->assertJsonPath('data.type', 'bundle');
+    }
+
+    public function test_display_title_es_etiqueta_por_cantidad_cuando_hay_multiples_productos(): void
+    {
+        $this->actingAsRole('admin');
+        $auction = $this->createAuction();
+        $productA = $this->createProduct(['title' => 'Producto A']);
+        $productB = $this->createProduct(['title' => 'Producto B']);
+
+        $lot = $this->createLot($auction, ['lot_number' => 'LOT-203'], [$productA, $productB]);
+
+        $response = $this->getJson("/api/v1/lots/{$lot->guid}")->assertOk();
+
+        $response->assertJsonPath('data.display_title', 'Lote LOT-203 — 2 productos')
+            ->assertJsonPath('data.type', 'bundle');
+    }
+
+    public function test_titulo_explicito_no_afecta_el_type(): void
+    {
+        $this->actingAsRole('admin');
+        $auction = $this->createAuction();
+        $lot = $this->createLot($auction, ['lot_number' => 'LOT-204', 'title' => 'Título editorial']);
+
+        $response = $this->getJson("/api/v1/lots/{$lot->guid}")->assertOk();
+
+        $response->assertJsonPath('data.display_title', 'Título editorial')
+            ->assertJsonPath('data.type', 'single');
+    }
+
+    public function test_put_actualiza_titulo_y_persiste_regresion_de_whitelist(): void
+    {
+        $this->actingAsRole('admin');
+        $auction = $this->createAuction();
+        $lot = $this->createLot($auction, ['lot_number' => 'LOT-205']);
+
+        $this->putJson("/api/v1/lots/{$lot->guid}", ['title' => 'Reserva Especial'])
+            ->assertOk()
+            ->assertJsonPath('data.title', 'Reserva Especial')
+            ->assertJsonPath('data.display_title', 'Reserva Especial');
+
+        $this->assertDatabaseHas('lots', ['id' => $lot->id, 'title' => 'Reserva Especial']);
+
+        $this->getJson("/api/v1/lots/{$lot->guid}")
+            ->assertOk()
+            ->assertJsonPath('data.title', 'Reserva Especial');
+    }
+
+    public function test_put_limpia_titulo_y_revierte_a_display_title_derivado(): void
+    {
+        $this->actingAsRole('admin');
+        $auction = $this->createAuction();
+        $lot = $this->createLot($auction, ['lot_number' => 'LOT-206', 'title' => 'Reserva Especial'], [$this->createProduct(['title' => 'Malbec Reserva'])]);
+
+        $this->putJson("/api/v1/lots/{$lot->guid}", ['title' => null])
+            ->assertOk()
+            ->assertJsonPath('data.title', null)
+            ->assertJsonPath('data.display_title', 'Malbec Reserva')
+            ->assertJsonPath('data.type', 'single');
+    }
+
+    public function test_rechaza_titulo_mayor_a_255_caracteres_en_create_y_update(): void
+    {
+        $this->actingAsRole('admin');
+        $auction = $this->createAuction();
+        $product = $this->createProduct();
+        $longTitle = str_repeat('a', 256);
+
+        $this->postJson('/api/v1/lots', [
+            'auction_guid' => $auction->guid,
+            'lot_number' => 'LOT-207',
+            'title' => $longTitle,
+            'starting_price' => '100.00',
+            'bid_increment' => '10.00',
+            'products' => [['product_guid' => $product->guid, 'quantity' => 1]],
+        ])->assertUnprocessable()->assertJsonValidationErrors(['title']);
+
+        $lot = $this->createLot($auction, ['lot_number' => 'LOT-208']);
+
+        $this->putJson("/api/v1/lots/{$lot->guid}", ['title' => $longTitle])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['title']);
+    }
 }

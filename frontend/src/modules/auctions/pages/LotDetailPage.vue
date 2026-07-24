@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import LotBidHistory from '../components/LotBidHistory.vue'
 import PlaceBidForm from '../components/PlaceBidForm.vue'
 import { useLot } from '../composables/useLot'
-import type { LotStatus } from '../types/lot.types'
+import type { LotStatus, LotType } from '../types/lot.types'
 
 const props = defineProps<{ guid: string }>()
 
@@ -17,11 +17,16 @@ const statusColor: Record<LotStatus, string> = {
   sold: 'gold',
   unsold: 'default',
 }
+
+const typeColor: Record<LotType, string> = {
+  single: 'default',
+  bundle: 'purple',
+}
 </script>
 
 <template>
   <div>
-    <AppHeader :title="lot ? `${t('lots.title')} ${lot.lot_number}` : t('lots.title')" :subtitle="lot?.auction?.title" />
+    <AppHeader :title="lot ? lot.display_title : t('lots.title')" :subtitle="lot?.auction?.title" />
 
     <a-skeleton v-if="isLoading" active />
 
@@ -42,6 +47,9 @@ const statusColor: Record<LotStatus, string> = {
         <div class="lot-detail__stat">
           <span class="lot-detail__label">{{ t('lots.table.status') }}</span>
           <a-tag :color="statusColor[lot.status]">{{ t(`lots.status.${lot.status}`) }}</a-tag>
+        </div>
+        <div class="lot-detail__stat">
+          <a-tag :color="typeColor[lot.type]">{{ t(`lots.type.${lot.type}`) }}</a-tag>
         </div>
       </div>
 

@@ -16,6 +16,7 @@ class Lot extends Model
     protected $fillable = [
         'auction_id',
         'lot_number',
+        'title',
         'starting_price',
         'bid_increment',
         'reserve_price',
@@ -57,5 +58,57 @@ class Lot extends Model
     public function currentWinner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'current_winner_user_id');
+    }
+
+    /**
+     * 'single' iff exactly one attached product at pivot quantity 1, else
+     * 'bundle'. Guarded against an unloaded `products` relation to avoid a
+     * surprise lazy-load/N+1 — the two real read paths (findByGuid/list)
+     * always eager-load it, so the fallback below is defensive only.
+     */
+    public function getTypeAttribute(): string
+    {
+        if (! $this->relationLoaded('products')) {
+            return 'bundle';
+        }
+
+        $products = $this->products;
+
+        if ($products->count() === 1 && (int) $products->first()->pivot->quantity === 1) {
+            return 'single';
+        }
+
+        return 'bundle';
+    }
+
+    /**
+     * Explicit `title` override wins; otherwise derives from the products
+     * composition. Never null — always a display-ready string.
+     */
+    public function getDisplayTitleAttribute(): string
+    {
+        if ($this->title !== null && $this->title !== '') {
+            return $this->title;
+        }
+
+        return $this->deriveTitle();
+    }
+
+    /**
+     * Same relationLoaded guard as getTypeAttribute() — see note there.
+     */
+    protected function deriveTitle(): string
+    {
+        if (! $this->relationLoaded('products')) {
+            return "Lote {$this->lot_number}";
+        }
+
+        $products = $this->products;
+
+        if ($products->count() === 1 && (int) $products->first()->pivot->quantity === 1) {
+            return $products->first()->title;
+        }
+
+        return "Lote {$this->lot_number} — {$products->count()} productos";
     }
 }

@@ -36,6 +36,7 @@ const { errors, defineField, handleSubmit, setErrors, setValues } = useForm({
 })
 
 const [lotNumber, lotNumberAttrs] = defineField('lot_number')
+const [title, titleAttrs] = defineField('title')
 const [startingPrice, startingPriceAttrs] = defineField('starting_price')
 const [bidIncrement, bidIncrementAttrs] = defineField('bid_increment')
 const [reservePrice, reservePriceAttrs] = defineField('reserve_price')
@@ -51,6 +52,7 @@ watch(
     if (props.mode === 'edit' && lot) {
       setValues({
         lot_number: lot.lot_number,
+        title: lot.title ?? '',
         starting_price: lot.starting_price,
         bid_increment: lot.bid_increment,
         reserve_price: lot.reserve_price ?? '',
@@ -95,6 +97,7 @@ const onSubmit = handleSubmit((values: LotDetailsFormValues) => {
     emit('submit', {
       auction_guid: auctionGuid.value,
       lot_number: values.lot_number,
+      title: values.title || null,
       starting_price: values.starting_price,
       bid_increment: values.bid_increment,
       reserve_price: values.reserve_price || null,
@@ -104,6 +107,7 @@ const onSubmit = handleSubmit((values: LotDetailsFormValues) => {
   } else {
     emit('submit', {
       lot_number: values.lot_number,
+      title: values.title || null,
       starting_price: values.starting_price,
       bid_increment: values.bid_increment,
       reserve_price: values.reserve_price || null,
@@ -140,6 +144,15 @@ defineExpose({ submit: onSubmit })
             :help="errors.lot_number ?? ''"
           >
             <a-input v-model:value="lotNumber" v-bind="lotNumberAttrs" />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24">
+          <a-form-item
+            :label="t('lots.form.title')"
+            :validate-status="errors.title ? 'error' : ''"
+            :help="errors.title ?? ''"
+          >
+            <a-input v-model:value="title" v-bind="titleAttrs" :placeholder="t('lots.form.titlePlaceholder')" />
           </a-form-item>
         </a-col>
         <a-col :xs="24" :md="8">

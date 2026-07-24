@@ -17,6 +17,7 @@ const optionalMoneyString = z
 
 export const lotDetailsSchema = z.object({
   lot_number: z.string().min(1, 'El número de lote es requerido').max(50, 'Máximo 50 caracteres'),
+  title: z.string().max(255, 'Máximo 255 caracteres').optional().or(z.literal('')).nullable(),
   starting_price: moneyString,
   bid_increment: moneyString,
   reserve_price: optionalMoneyString,
