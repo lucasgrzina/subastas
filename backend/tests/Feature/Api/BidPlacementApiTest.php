@@ -95,6 +95,34 @@ class BidPlacementApiTest extends TestCase
         $this->assertDatabaseHas('lots', ['id' => $lot->id, 'current_price' => 110.00]);
     }
 
+    public function test_primera_oferta_bajo_el_precio_base_menciona_el_precio_base(): void
+    {
+        $lot = $this->createOpenLot();
+        $this->actingAsRole('bidder');
+
+        // No current price yet, so the floor is the base price (100.00); the
+        // message must name the base price, not a non-existent "precio actual".
+        $this->postJson("/api/v1/lots/{$lot->guid}/bids", ['amount' => '50.00'])
+            ->assertUnprocessable()
+            ->assertJsonPath('errors.amount.0', 'La primera oferta debe ser mayor o igual al precio base ($100.00).');
+
+        $this->assertDatabaseCount('bids', 0);
+    }
+
+    public function test_oferta_posterior_bajo_el_minimo_menciona_precio_actual_mas_incremento(): void
+    {
+        $lot = $this->createOpenLot();
+        $this->actingAsRole('bidder');
+
+        $this->postJson("/api/v1/lots/{$lot->guid}/bids", ['amount' => '110.00'])
+            ->assertCreated();
+
+        // Floor is now 110 + 10 = 120; a below-floor bid names that minimum.
+        $this->postJson("/api/v1/lots/{$lot->guid}/bids", ['amount' => '115.00'])
+            ->assertUnprocessable()
+            ->assertJsonPath('errors.amount.0', 'La oferta debe ser mayor o igual al mínimo ($120.00): precio actual más el incremento.');
+    }
+
     public function test_rechaza_oferta_en_lote_no_abierto(): void
     {
         $lot = $this->createOpenLot(overrides: ['status' => 'scheduled']);
