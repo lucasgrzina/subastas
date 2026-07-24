@@ -121,10 +121,10 @@ defineExpose({ submit: onSubmit })
 </script>
 
 <template>
-  <a-form layout="vertical" @submit.prevent="onSubmit">
+  <a-form layout="vertical" class="flex flex-col gap-6" @submit.prevent="onSubmit">
     <FormSection>
       <a-row :gutter="12">
-        <a-col :xs="24" :md="12">
+        <a-col :xs="24" :md="12" :lg="16">
           <a-form-item :label="t('lots.form.auction')">
             <a-select
               v-if="mode === 'create'"
@@ -137,7 +137,7 @@ defineExpose({ submit: onSubmit })
             <span v-else>{{ initialValues?.auction?.title ?? '—' }}</span>
           </a-form-item>
         </a-col>
-        <a-col :xs="24" :md="12">
+        <a-col :xs="24" :md="6" :lg="4">
           <a-form-item
             :label="t('lots.form.lot_number')"
             :validate-status="errors.lot_number ? 'error' : ''"
@@ -146,6 +146,11 @@ defineExpose({ submit: onSubmit })
             <a-input v-model:value="lotNumber" v-bind="lotNumberAttrs" />
           </a-form-item>
         </a-col>
+        <a-col :xs="24" :md="6" :lg="4">
+          <a-form-item :label="t('lots.form.status')">
+            <a-select v-model:value="status" :options="statusOptions" />
+          </a-form-item>
+        </a-col>        
         <a-col :xs="24">
           <a-form-item
             :label="t('lots.form.title')"
@@ -182,11 +187,7 @@ defineExpose({ submit: onSubmit })
             <a-input v-model:value="reservePrice" v-bind="reservePriceAttrs" placeholder="0.00" />
           </a-form-item>
         </a-col>
-        <a-col :xs="24" :md="8">
-          <a-form-item :label="t('lots.form.status')">
-            <a-select v-model:value="status" :options="statusOptions" />
-          </a-form-item>
-        </a-col>
+
       </a-row>
     </FormSection>
 

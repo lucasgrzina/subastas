@@ -30,29 +30,30 @@ const typeColor: Record<LotType, string> = {
 
     <a-skeleton v-if="isLoading" active />
 
-    <template v-else-if="lot">
-      <div class="lot-detail__summary">
-        <div class="lot-detail__stat">
-          <span class="lot-detail__label">{{ t('lots.detail.currentPrice') }}</span>
-          <strong>{{ lot.current_price ? `$${lot.current_price}` : '—' }}</strong>
+    <div v-else-if="lot" class="flex flex-col gap-6">
+      <FormSection>
+        <div class="lot-detail__summary">
+          <div class="lot-detail__stat">
+            <span class="lot-detail__label">{{ t('lots.detail.currentPrice') }}</span>
+            <strong>{{ lot.current_price ? `$${lot.current_price}` : '—' }}</strong>
+          </div>
+          <div class="lot-detail__stat">
+            <span class="lot-detail__label">{{ t('lots.detail.reservePrice') }}</span>
+            <strong>{{ lot.reserve_price ? `$${lot.reserve_price}` : '—' }}</strong>
+          </div>
+          <div class="lot-detail__stat">
+            <span class="lot-detail__label">{{ t('lots.detail.currentWinner') }}</span>
+            <strong>{{ lot.current_winner?.name ?? t('lots.detail.noWinnerYet') }}</strong>
+          </div>
+          <div class="lot-detail__stat">
+            <span class="lot-detail__label">{{ t('lots.table.status') }}</span>
+            <a-tag :color="statusColor[lot.status]">{{ t(`lots.status.${lot.status}`) }}</a-tag>
+          </div>
+          <div class="lot-detail__stat">
+            <a-tag :color="typeColor[lot.type]">{{ t(`lots.type.${lot.type}`) }}</a-tag>
+          </div>
         </div>
-        <div class="lot-detail__stat">
-          <span class="lot-detail__label">{{ t('lots.detail.reservePrice') }}</span>
-          <strong>{{ lot.reserve_price ? `$${lot.reserve_price}` : '—' }}</strong>
-        </div>
-        <div class="lot-detail__stat">
-          <span class="lot-detail__label">{{ t('lots.detail.currentWinner') }}</span>
-          <strong>{{ lot.current_winner?.name ?? t('lots.detail.noWinnerYet') }}</strong>
-        </div>
-        <div class="lot-detail__stat">
-          <span class="lot-detail__label">{{ t('lots.table.status') }}</span>
-          <a-tag :color="statusColor[lot.status]">{{ t(`lots.status.${lot.status}`) }}</a-tag>
-        </div>
-        <div class="lot-detail__stat">
-          <a-tag :color="typeColor[lot.type]">{{ t(`lots.type.${lot.type}`) }}</a-tag>
-        </div>
-      </div>
-
+      </FormSection>
       <FormSection :title="t('lots.form.products')">
         <a-tag v-for="p in lot.products" :key="p.guid">{{ p.title }} × {{ p.quantity }}</a-tag>
       </FormSection>
@@ -66,7 +67,7 @@ const typeColor: Record<LotType, string> = {
       <FormSection>
         <LotBidHistory :guid="lot.guid" />
       </FormSection>
-    </template>
+    </div>
   </div>
 </template>
 

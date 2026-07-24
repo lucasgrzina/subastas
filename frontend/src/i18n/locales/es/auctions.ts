@@ -63,7 +63,7 @@ export default {
     },
     form: {
       auction: 'Subasta',
-      lot_number: 'Número de lote',
+      lot_number: 'Nº de lote',
       title: 'Título',
       titlePlaceholder: 'Ej: Vertical Catena 2015-2020 (opcional)',
       starting_price: 'Precio base',
